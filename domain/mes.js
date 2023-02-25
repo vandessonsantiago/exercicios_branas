@@ -8,6 +8,10 @@ class Mes {
         this.lancamentos = []
     }
 
+    arrendondar (valor) {
+        return Math.round(valor * 100) / 100
+    }
+
     adicionarLancamento (lancamento) {
         this.lancamentos.push(lancamento)
     }
@@ -46,7 +50,7 @@ class Mes {
         const distribuicaoDeDespesas = [];
         for ( const lancamento of this.lancamentos) {
             if (lancamento.tipo === "despesa") {
-                const percentual = arrendondar((lancamento.valor/this.totalizador.despesas) * 100)
+                const percentual = this.arrendondar((lancamento.valor/this.totalizador.despesas) * 100)
                 distribuicaoDeDespesas.push({categoria: lancamento.categoria, percentual})
             }
     
@@ -57,13 +61,13 @@ class Mes {
     apurarJuros () {
         if (this.totalizador.saldo < 0) {
             this.totalizador.juros = this.calcularJuros(this.totalizador.saldo)
-            this.totalizador.saldo = arrendondar(this.totalizador.saldo + this.totalizador.juros)
+            this.totalizador.saldo = this.arrendondar(this.totalizador.saldo + this.totalizador.juros)
         }
         
     }
 
     calcularJuros (valor) {
-        const juros = arrendondar(valor * 0.1);
+        const juros = this.arrendondar(valor * 0.1);
         return juros;
     }
 
@@ -71,14 +75,14 @@ class Mes {
     apurarRendimentos () {
         if (this.totalizador.saldo > 0) {
             this.totalizador.rendimentos = this.calcularRendimentos(this.totalizador.saldo)
-            this.totalizador.saldo = arrendondar(this.totalizador.saldo + this.totalizador.rendimentos)
+            this.totalizador.saldo = this.arrendondar(this.totalizador.saldo + this.totalizador.rendimentos)
         
         }
         
     }
 
     calcularRendimentos (valor) {
-        const rendimentos = arrendondar(valor * 0.005);
+        const rendimentos = this.arrendondar(valor * 0.005);
         return rendimentos;
     }
 

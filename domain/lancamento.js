@@ -14,4 +14,14 @@ class Lancamento {
         this.tipo = tipo;
         this.valor = valor;
     }
+
+    getValorString () {
+    
+        // operador ternário
+        return (this.tipo === "despesa") ? this.valor * -1 : this.valor;
+        
+        
+    }
+
 }
+
