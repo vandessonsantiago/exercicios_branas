@@ -12,7 +12,7 @@ class Tela {
         ano.adicionarMes(new Mes("marco"));
         ano.adicionarMes(new Mes("abril"));
         for (const lancamento of lancamentos) {
-            ano.adicionarLancamento(lancamento.mes, new Lancamento(lancamento.categoria, lancamento.tipo, parseFloat(lancamento.valor)));
+            ano.adicionarLancamento(lancamento.mes, new Lancamento(lancamento.categoria, lancamento.tipo, lancamento.valor, lancamento.idLancamento));
         }
         ano.calcularSaldo();
         this.ano = ano;
@@ -36,6 +36,11 @@ class Tela {
         tipo.value = "receita";
         categoria.value = "";
         valor.value = "";
+    }
+
+    deletarLancamento(idLancamento) {
+        fetch(`http://localhost:3000/api/lancamentos/${idLancamento}`, {method: "delete"});
+      
     }
     
     renderizar () {
@@ -77,7 +82,14 @@ class Tela {
             const tabelaLancamentos = new Tabela("tabela-lancamentos");
             tabelaLancamentos.addRow("th", ["Categoria", "Valor"]);
             for (const lancamento of mes.lancamentos) {
-                tabelaLancamentos.addRow("td", [lancamento.categoria, this.formatarDinheiro(lancamento.getValorString())]);
+                const button = new Button("delete-lancamento", "delete");
+                button.addListener(() => {
+                    this.deletarLancamento(lancamento.idLancamento);
+                    this.ano.deletarLancamento(mes, lancamento);
+                    this.renderizar();
+                })
+                
+                tabelaLancamentos.addRow("td", [lancamento.categoria, this.formatarDinheiro(lancamento.getValorString())], [button]);
             }
             tabelaLancamentos.addRow("th", ["Juros", this.formatarDinheiro(mes.totalizador.juros)]);
             tabelaLancamentos.addRow("th", ["Rendimentos", this.formatarDinheiro(mes.totalizador.rendimentos)]);
